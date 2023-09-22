@@ -69,3 +69,11 @@ my_documents = [
     "El diseño de interfaces de usuario es crucial para la experiencia del usuario",
     "La seguridad en el desarrollo es un proceso constante de mitigación de riesgos"
 ]
+cache ={}
+for index, documento in enumerate(my_documents):
+    words = documento.lower().split()
+    for word in words: 
+        if word in cache: 
+            cache[word].append(my_documents[index])
+        else: 
+            cache[word] = [my_documents[index]]

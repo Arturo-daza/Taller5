@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-
+import mook
 app= FastAPI()
 
 @app.get("/")
@@ -10,6 +10,6 @@ def root():
 
 #Buscador de palabra en los indices invertirdos
 @app.post("/indices-invertidos")
-def indeces_invertidos(): 
+def indeces_invertidos(palabra: dict): 
     #logica del codigo
-    return {}
+    return mook.cache.get(palabra["palabra"], "No se encontro")
