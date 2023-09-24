@@ -4,10 +4,16 @@ class PalabraBuscar(BaseModel):
     palabra: str
 
 class ResultadoBusqueda(BaseModel):
-    resultado: list
+    resultado: list[str]
     
 class ListaNumeros(BaseModel):
     lista: list[int]
 
 class NumeroRepetido(BaseModel):
     repetido: int
+
+class ListaMergeSort(BaseModel):
+    lista: list[str]
+
+class ResultadoMergeSort(BaseModel):
+    organizado: list[str]

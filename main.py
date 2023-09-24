@@ -16,7 +16,7 @@ def root():
 
 #Buscador de palabra en los indices invertirdos
 @app.post("/indices-invertidos", response_model=schema.ResultadoBusqueda)
-def indeces_invertidos(palabra: schema.PalabraBuscar): 
+def indices_invertidos(palabra: schema.PalabraBuscar): 
     """
     Endpoint que recibe una palabra y devuelve el documento si existe en la caché.
 
@@ -36,6 +36,8 @@ def numeros_repetidos(lista: schema.ListaNumeros):
     """
     Detects the first repeated number in a list.
 
+    the array contains numbers that are in the range 1 to n, where n is the length of the array.
+    
     Args:
         lista (dict): A dictionary containing a list of integers under the key 'lista'.
 
@@ -43,3 +45,17 @@ def numeros_repetidos(lista: schema.ListaNumeros):
         dict: A dictionary containing the first repeated number under the key 'repetido'.
     """
     return {"repetido":mook.detectar_primer_repetido(lista.get('lista'))}
+
+
+@app.post("/merge-sort", response_model= schema.ResultadoMergeSort)
+def merge_sort(lista: schema.ListaMergeSort):
+    """
+    Sorts a list of strings using merge sort.
+
+    Args:
+        lista (dict): A dictionary containing a list of strings under the key 'lista'.
+
+    Returns:
+        dict: A dictionary containing the sorted list of strings under the key 'organizado'.
+    """
+    return {"organizado":mook.merge_sort(lista.lista)}

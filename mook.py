@@ -99,3 +99,35 @@ def detectar_primer_repetido(lista):
         liebre = lista[liebre]
         tortuga = lista[tortuga]
     return tortuga
+
+def merge_sort(lista):
+    if len(lista) <= 1:
+        return lista
+
+    mitad = len(lista) // 2
+    izquierda = merge_sort(lista[:mitad])
+    derecha = merge_sort(lista[mitad:])
+
+    return merge(izquierda, derecha)
+
+def merge(izquierda, derecha):
+    resultado = []
+    i = j = 0
+
+    while i < len(izquierda) and j < len(derecha):
+        if izquierda[i] < derecha[j]:
+            resultado.append(izquierda[i])
+            i += 1
+        else:
+            resultado.append(derecha[j])
+            j += 1
+
+    while i < len(izquierda):
+        resultado.append(izquierda[i])
+        i += 1
+
+    while j < len(derecha):
+        resultado.append(derecha[j])
+        j += 1
+
+    return resultado
