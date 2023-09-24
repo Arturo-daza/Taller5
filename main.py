@@ -5,7 +5,8 @@ app= FastAPI()
 @app.get("/")
 def root(): 
     return{
-        "Servicio": "Estructura de datos"
+        "Servicio": "El más eficiente",
+        "El que lea esto" : "le deseo lo mejor"
     }
 
 #Buscador de palabra en los indices invertirdos
