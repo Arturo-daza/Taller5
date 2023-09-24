@@ -18,6 +18,6 @@ def indeces_invertidos(palabra: dict):
 
 #Devuelve un repetido de una lista
 @app.post("/numero-repetido")
-def indeces_invertidos(lista: dict): 
+def numeros_repetidos(lista: dict): 
     
     return {"repetido":mook.detectar_primer_repetido(lista.get('lista'))}
