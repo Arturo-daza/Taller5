@@ -1,13 +1,21 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import schema
 import mook
 
 
+app = FastAPI()
 
-app= FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-@app.get("api/")
+@app.get("/api/")
 def root(): 
     return{
         "Servicio": "Estructura de datos",
@@ -15,7 +23,7 @@ def root():
     }
 
 #Buscador de palabra en los indices invertirdos
-@app.post("api/indices-invertidos", response_model=schema.ResultadoBusqueda)
+@app.post("/api/indices-invertidos", response_model=schema.ResultadoBusqueda)
 def indices_invertidos(palabra: schema.PalabraBuscar): 
     """
     Endpoint que recibe una palabra y devuelve el documento si existe en la caché.
@@ -27,11 +35,11 @@ def indices_invertidos(palabra: schema.PalabraBuscar):
         str: El/Los documentos de la palabra si se encuentra en la caché, de lo contrario "No se encontro".
     """
     
-    return {"resultado" : mook.cache.get(palabra.palabra, "No se encontro")}
+    return {"resultado" : mook.cache.get(palabra.palabra, ["No se encontro"])}
 
 
 #Devuelve un repetido de una lista
-@app.post("api/numero-repetido", response_model=schema.NumeroRepetido)
+@app.post("/api/numero-repetido", response_model=schema.NumeroRepetido)
 def numeros_repetidos(lista: schema.ListaNumeros): 
     """
     Detects the first repeated number in a list.
@@ -47,7 +55,7 @@ def numeros_repetidos(lista: schema.ListaNumeros):
     return {"repetido":mook.detectar_primer_repetido(lista.get('lista'))}
 
 
-@app.post("api/merge-sort", response_model= schema.ResultadoMergeSort)
+@app.post("/api/merge-sort", response_model= schema.ResultadoMergeSort)
 def merge_sort(lista: schema.ListaMergeSort):
     """
     Sorts a list of strings using merge sort.
