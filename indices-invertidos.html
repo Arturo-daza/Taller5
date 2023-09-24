@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Consumer</title>
+    <script>
+        function buscarPalabra() {
+            let palabra = document.getElementById('palabra').value;
+
+            fetch('http://localhost:8000/api/indices-invertidos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({palabra: palabra}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                let resultado = data.resultado;
+                let lista = document.createElement('ul');
+                resultado.forEach(function(elemento) {
+                    let item = document.createElement('li');
+                    item.appendChild(document.createTextNode(elemento));
+                    lista.appendChild(item);
+                });
+                document.getElementById('resultado').innerHTML = 'Resultado:';
+                document.getElementById('resultado').appendChild(lista);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Buscador de palabra en los indices invertidos</h1>
+    <input type="text" id="palabra" placeholder="Ingrese la palabra a buscar">
+    <button onclick="buscarPalabra()">Buscar</button>
+    <p id="resultado"></p>
+</body>
+</html>
