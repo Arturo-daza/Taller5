@@ -1,6 +1,11 @@
 from fastapi import FastAPI
+import schema
 import mook
+
+
+
 app= FastAPI()
+
 
 @app.get("/")
 def root(): 
@@ -10,17 +15,19 @@ def root():
     }
 
 #Buscador de palabra en los indices invertirdos
-@app.post("/indices-invertidos")
-def indeces_invertidos(palabra: dict): 
-    """_summary_
+@app.post("/indices-invertidos", response_model=schema.ResultadoBusqueda)
+def indeces_invertidos(palabra: schema.PalabraBuscar): 
+    """
+    Endpoint que recibe una palabra y devuelve el documento si existe en la caché.
 
     Args:
-        palabra (dict): Recibe un dicconario con la llave "palabra" y el valor la palabra a buscar
+        palabra (schema.PalabraBuscar): Objeto que contiene la palabra a buscar.
 
     Returns:
-        list: la lista de documentos donde aparece la palabra buscada
+        str: El/Los documentos de la palabra si se encuentra en la caché, de lo contrario "No se encontro".
     """
-    return mook.cache.get(palabra["palabra"], "No se encontro")
+    
+    return {"resultado" : mook.cache.get(palabra.palabra, "No se encontro")}
 
 
 #Devuelve un repetido de una lista
