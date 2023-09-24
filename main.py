@@ -14,3 +14,10 @@ def root():
 def indeces_invertidos(palabra: dict): 
     #logica del codigo
     return mook.cache.get(palabra["palabra"], "No se encontro")
+
+
+#Devuelve un repetido de una lista
+@app.post("/numero-repetido")
+def indeces_invertidos(lista: dict): 
+    
+    return {"repetido":mook.detectar_primer_repetido(lista.get('lista'))}

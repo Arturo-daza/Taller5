@@ -69,11 +69,33 @@ my_documents = [
     "El diseño de interfaces de usuario es crucial para la experiencia del usuario",
     "La seguridad en el desarrollo es un proceso constante de mitigación de riesgos"
 ]
-cache ={}
+cache = {}
 for index, documento in enumerate(my_documents):
     words = documento.lower().split()
-    for word in words: 
-        if word in cache: 
+    for word in words:
+        if word in cache:
             cache[word].append(my_documents[index])
-        else: 
+        else:
             cache[word] = [my_documents[index]]
+
+
+def detectar_primer_repetido(lista):
+    # el array contiene números que están en el rango de 1 a n, donde n es la longitud del array.
+    tortuga = lista[0]
+    print(tortuga)
+    liebre = lista[0]
+    print(liebre)
+    while True:
+        tortuga = lista[tortuga]
+        liebre = lista[lista[liebre]]
+        print(tortuga, liebre)
+        if tortuga == liebre:
+            print(tortuga, liebre)
+            break
+
+    liebre = lista[0]
+
+    while liebre != tortuga:
+        liebre = lista[liebre]
+        tortuga = lista[tortuga]
+    return tortuga
