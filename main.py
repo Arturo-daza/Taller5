@@ -12,12 +12,18 @@ def root():
 #Buscador de palabra en los indices invertirdos
 @app.post("/indices-invertidos")
 def indeces_invertidos(palabra: dict): 
-    #logica del codigo
+    """_summary_
+
+    Args:
+        palabra (dict): Recibe un dicconario con la llave "palabra" y el valor la palabra a buscar
+
+    Returns:
+        list: la lista de documentos donde aparece la palabra buscada
+    """
     return mook.cache.get(palabra["palabra"], "No se encontro")
 
 
 #Devuelve un repetido de una lista
 @app.post("/numero-repetido")
 def numeros_repetidos(lista: dict): 
-    
     return {"repetido":mook.detectar_primer_repetido(lista.get('lista'))}
