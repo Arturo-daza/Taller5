@@ -7,15 +7,15 @@ import mook
 app= FastAPI()
 
 
-@app.get("/")
+@app.get("api/")
 def root(): 
     return{
-        "Servicio": "El más eficiente",
-        "El que lea esto" : "le deseo lo mejor"
+        "Servicio": "Estructura de datos",
+        "Lista para la busqueda" : mook.my_documents
     }
 
 #Buscador de palabra en los indices invertirdos
-@app.post("/indices-invertidos", response_model=schema.ResultadoBusqueda)
+@app.post("api/indices-invertidos", response_model=schema.ResultadoBusqueda)
 def indices_invertidos(palabra: schema.PalabraBuscar): 
     """
     Endpoint que recibe una palabra y devuelve el documento si existe en la caché.
@@ -31,7 +31,7 @@ def indices_invertidos(palabra: schema.PalabraBuscar):
 
 
 #Devuelve un repetido de una lista
-@app.post("/numero-repetido", response_model=schema.NumeroRepetido)
+@app.post("api/numero-repetido", response_model=schema.NumeroRepetido)
 def numeros_repetidos(lista: schema.ListaNumeros): 
     """
     Detects the first repeated number in a list.
@@ -47,7 +47,7 @@ def numeros_repetidos(lista: schema.ListaNumeros):
     return {"repetido":mook.detectar_primer_repetido(lista.get('lista'))}
 
 
-@app.post("/merge-sort", response_model= schema.ResultadoMergeSort)
+@app.post("api/merge-sort", response_model= schema.ResultadoMergeSort)
 def merge_sort(lista: schema.ListaMergeSort):
     """
     Sorts a list of strings using merge sort.
