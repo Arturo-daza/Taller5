@@ -5,3 +5,9 @@ class PalabraBuscar(BaseModel):
 
 class ResultadoBusqueda(BaseModel):
     resultado: list
+    
+class ListaNumeros(BaseModel):
+    lista: list[int]
+
+class NumeroRepetido(BaseModel):
+    repetido: int

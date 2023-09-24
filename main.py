@@ -31,6 +31,15 @@ def indeces_invertidos(palabra: schema.PalabraBuscar):
 
 
 #Devuelve un repetido de una lista
-@app.post("/numero-repetido")
-def numeros_repetidos(lista: dict): 
+@app.post("/numero-repetido", response_model=schema.NumeroRepetido)
+def numeros_repetidos(lista: schema.ListaNumeros): 
+    """
+    Detects the first repeated number in a list.
+
+    Args:
+        lista (dict): A dictionary containing a list of integers under the key 'lista'.
+
+    Returns:
+        dict: A dictionary containing the first repeated number under the key 'repetido'.
+    """
     return {"repetido":mook.detectar_primer_repetido(lista.get('lista'))}
