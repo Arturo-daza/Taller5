@@ -1,8 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.templating import Jinja2Templates
 import schema
 import mook
 
+templates = Jinja2Templates(directory="templates")
 
 app = FastAPI()
 
@@ -14,7 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+#APIS
 @app.get("/api/")
 def root(): 
     return{
@@ -67,3 +69,8 @@ def merge_sort(lista: schema.ListaMergeSort):
         dict: A dictionary containing the sorted list of strings under the key 'organizado'.
     """
     return {"organizado":mook.merge_sort(lista.lista)}
+
+#Templates
+@app.get('/indices-invertidos')
+def indices_invertidos(request:Request):
+    return templates.TemplateResponse("indices-invertidos.html", {"request":request})
