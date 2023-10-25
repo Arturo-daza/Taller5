@@ -54,7 +54,7 @@ def numeros_repetidos(lista: schema.ListaNumeros):
     Returns:
         dict: A dictionary containing the first repeated number under the key 'repetido'.
     """
-    return {"repetido":mook.detectar_primer_repetido(lista.get('lista'))}
+    return {"repetido":mook.detectar_primer_repetido(lista.lista)}
 
 
 @app.post("/api/merge-sort", response_model= schema.ResultadoMergeSort)
