@@ -100,6 +100,7 @@ def detectar_primer_repetido(lista):
         tortuga = lista[tortuga]
     return tortuga
 
+
 def merge_sort(lista):
     if len(lista) <= 1:
         return lista
@@ -109,6 +110,7 @@ def merge_sort(lista):
     derecha = merge_sort(lista[mitad:])
 
     return merge(izquierda, derecha)
+
 
 def merge(izquierda, derecha):
     resultado = []

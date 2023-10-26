@@ -16,17 +16,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-#APIS
+# APIS
 @app.get("/api/")
-def root(): 
-    return{
+def root():
+    return {
         "Servicio": "Estructura de datos",
-        "Lista para la busqueda" : mook.my_documents
+        "Lista para la busqueda": mook.my_documents
     }
 
-#Buscador de palabra en los indices invertirdos
+# Buscador de palabra en los indices invertirdos
 @app.post("/api/indices-invertidos", response_model=schema.ResultadoBusqueda)
-def indices_invertidos(palabra: schema.PalabraBuscar): 
+def indices_invertidos(palabra: schema.PalabraBuscar):
     """
     Endpoint que recibe una palabra y devuelve el documento si existe en la caché.
 
@@ -36,41 +36,43 @@ def indices_invertidos(palabra: schema.PalabraBuscar):
     Returns:
         str: El/Los documentos de la palabra si se encuentra en la caché, de lo contrario "No se encontro".
     """
-    
-    return {"resultado" : mook.cache.get(palabra.palabra, ["No se encontro"])}
+
+    return {"resultado": mook.cache.get(palabra.palabra, ["No se encontro"])}
 
 
-#Devuelve un repetido de una lista
+# Devuelve un repetido de una lista
 @app.post("/api/numero-repetido", response_model=schema.NumeroRepetido)
-def numeros_repetidos(lista: schema.ListaNumeros): 
+def numeros_repetidos(lista: schema.ListaNumeros):
     """
-    Detects the first repeated number in a list.
+    Detecta el primer número repetido en una lista.
 
-    the array contains numbers that are in the range 1 to n, where n is the length of the array.
-    
+    El array contiene números en el rango de 1 a n, donde n es la longitud del array.
+
     Args:
-        lista (dict): A dictionary containing a list of integers under the key 'lista'.
+        lista (dict): Un diccionario que contiene una lista de enteros bajo la clave 'lista'.
 
     Returns:
-        dict: A dictionary containing the first repeated number under the key 'repetido'.
+        dict: Un diccionario que contiene el primer número repetido bajo la clave 'repetido'.
     """
-    return {"repetido":mook.detectar_primer_repetido(lista.lista)}
+    return {"repetido": mook.detectar_primer_repetido(lista.lista)}
 
 
-@app.post("/api/merge-sort", response_model= schema.ResultadoMergeSort)
+@app.post("/api/merge-sort", response_model=schema.ResultadoMergeSort)
 def merge_sort(lista: schema.ListaMergeSort):
     """
-    Sorts a list of strings using merge sort.
+    Ordena una lista de cadenas de texto utilizando el algoritmo de ordenamiento merge sort.
 
     Args:
-        lista (dict): A dictionary containing a list of strings under the key 'lista'.
+        lista (dict): Un diccionario que contiene una lista de cadenas de texto bajo la clave 'lista'.
 
     Returns:
-        dict: A dictionary containing the sorted list of strings under the key 'organizado'.
+        dict: Un diccionario que contiene la lista de cadenas de texto ordenada bajo la clave 'organizado'.
     """
-    return {"organizado":mook.merge_sort(lista.lista)}
+    return {"organizado": mook.merge_sort(lista.lista)}
 
-#Templates
+# Templates
+
+
 @app.get('/indices-invertidos')
-def indices_invertidos(request:Request):
-    return templates.TemplateResponse("indices-invertidos.html", {"request":request})
+def indices_invertidos(request: Request):
+    return templates.TemplateResponse("indices-invertidos.html", {"request": request})
