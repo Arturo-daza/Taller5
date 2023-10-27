@@ -75,6 +75,20 @@ def merge_sort(lista: schema.ListaMergeSort):
 #Generación de arbol binario según una lista
 @app.post("/api/arbol-binario")
 def arbol_binario(lista: schema.ListaNumeros):
+    """
+    Crea un árbol binario de búsqueda a partir de una lista de números y devuelve su representación en formato JSON,
+    junto con sus recorridos en preorden, inorder y postorden.
+
+    Args:
+        lista: Una instancia de schema.ListaNumeros que contiene la lista de números a insertar en el árbol.
+
+    Returns:
+        Un diccionario con las siguientes claves:
+            - "arbol": La representación en formato JSON del árbol binario de búsqueda creado.
+            - "preorden": Una lista con los valores del árbol en recorrido preorden.
+            - "inorder": Una lista con los valores del árbol en recorrido inorder.
+            - "postorden": Una lista con los valores del árbol en recorrido postorden.
+    """
     arbol = ab.ArbolBinarioBusqueda()
     for valor in lista.lista:
         arbol.insertar(valor)
