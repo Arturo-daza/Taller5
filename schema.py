@@ -1,5 +1,16 @@
 from pydantic import BaseModel
-# Define un modelo Pydantic para el cuerpo de la solicitud
+
+class NodoSchema(BaseModel):
+    valor: int
+    izquierda: 'NodoSchema' = None
+    derecha: 'NodoSchema' = None
+
+class EsquemaArbol(BaseModel):
+    arbol: NodoSchema
+    preorden: list[int]
+    inorder: list[int]
+    postorden: list[int]
+
 class PalabraBuscar(BaseModel):
     palabra: str
 

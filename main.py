@@ -73,7 +73,7 @@ def merge_sort(lista: schema.ListaMergeSort):
 # Templates
 
 #Generación de arbol binario según una lista
-@app.post("/api/arbol-binario")
+@app.post("/api/arbol-binario", response_model = schema.EsquemaArbol)
 def arbol_binario(lista: schema.ListaNumeros):
     """
     Crea un árbol binario de búsqueda a partir de una lista de números y devuelve su representación en formato JSON,
