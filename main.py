@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 import schema
 import mook
-
+import arbol_binario as ab
 templates = Jinja2Templates(directory="templates")
 
 app = FastAPI()
@@ -72,6 +72,24 @@ def merge_sort(lista: schema.ListaMergeSort):
 
 # Templates
 
+#Generación de arbol binario según una lista
+@app.post("/api/arbol-binario")
+def arbol_binario(lista: schema.ListaNumeros):
+    arbol = ab.ArbolBinarioBusqueda()
+    for valor in lista.lista:
+        arbol.insertar(valor)
+    salida = arbol.imprimir_arbol_json()
+    preorden = arbol.preorden()
+    inorder = arbol.inorder()
+    postorden = arbol.postorden()
+    return {
+        "arbol": salida,
+        "preorden": preorden,
+        "inorder": inorder,
+        "postorden": postorden
+        }
+
+    
 
 @app.get('/indices-invertidos')
 def indices_invertidos(request: Request):
