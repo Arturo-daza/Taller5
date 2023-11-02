@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel 
 
 class NodoSchema(BaseModel):
     valor: int
@@ -28,3 +28,14 @@ class ListaMergeSort(BaseModel):
 
 class ResultadoMergeSort(BaseModel):
     organizado: list[str]
+
+
+class Grafo(BaseModel):
+    aristas: list[tuple[int, int]]
+    camino: tuple[int, int]
+class Camino(BaseModel):
+    grafo:dict[str, list[int]]
+    bfs: list[int]
+    dfs:list[int]
+    
+    

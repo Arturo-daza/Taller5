@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 import schema
 import mook
 import arbol_binario as ab
+from grafo import Grafo
 templates = Jinja2Templates(directory="templates")
 
 app = FastAPI()
@@ -54,6 +55,7 @@ def numeros_repetidos(lista: schema.ListaNumeros):
     Returns:
         dict: Un diccionario que contiene el primer número repetido bajo la clave 'repetido'.
     """
+    
     return {"repetido": mook.detectar_primer_repetido(lista.lista)}
 
 
@@ -102,9 +104,28 @@ def arbol_binario(lista: schema.ListaNumeros):
         "inorder": inorder,
         "postorden": postorden
         }
-
+@app.post("/api/grafo")
+def grafo(grafo_buscar: schema.Grafo, response_model= schema.Camino):
+    """
+    Esta función recibe un objeto de grafo y devuelve un diccionario que contiene el grafo,
+    el resultado de una búsqueda en anchura (breadth-first search) y el resultado de una búsqueda en profundidad (depth-first search).
     
+    Args:
+    - grafo_buscar: Un objeto de grafo que contiene el grafo a ser buscado y la ruta a ser encontrada.
+    - response_model: El modelo de respuesta a ser utilizado para el diccionario devuelto.
+    
+    Returns:
+    - Un diccionario que contiene el grafo, el resultado de una búsqueda en anchura y el resultado de una búsqueda en profundidad.    """
+    grafo = Grafo()
+    print(grafo_buscar)
+    for arista in grafo_buscar.aristas:
+        grafo.agregar_arista(*arista)
+    bfs=grafo.bfs(grafo_buscar.camino[0], grafo_buscar.camino[1])
+    dfs = grafo.dfs(grafo_buscar.camino[0], grafo_buscar.camino[1])
+    
+    return {"Grafo": grafo.grafo, "bfs": bfs, "dfs":dfs}
 
 @app.get('/indices-invertidos')
 def indices_invertidos(request: Request):
     return templates.TemplateResponse("indices-invertidos.html", {"request": request})
+
