@@ -104,8 +104,8 @@ def arbol_binario(lista: schema.ListaNumeros):
         "inorder": inorder,
         "postorden": postorden
         }
-@app.post("/api/grafo")
-def grafo(grafo_buscar: schema.Grafo, response_model= schema.Camino):
+@app.post("/api/grafo", response_model= schema.Camino)
+def grafo(grafo_buscar: schema.Grafo):
     """
     Esta función recibe un objeto de grafo y devuelve un diccionario que contiene el grafo,
     el resultado de una búsqueda en anchura (breadth-first search) y el resultado de una búsqueda en profundidad (depth-first search).
