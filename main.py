@@ -104,6 +104,7 @@ def arbol_binario(lista: schema.ListaNumeros):
         "inorder": inorder,
         "postorden": postorden
         }
+
 @app.post("/api/grafo", response_model= schema.Camino)
 def grafo(grafo_buscar: schema.Grafo):
     """
