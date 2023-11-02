@@ -32,13 +32,13 @@ def indices_invertidos(palabra: schema.PalabraBuscar):
     Endpoint que recibe una palabra y devuelve el documento si existe en la caché.
 
     Args:
-        palabra (schema.PalabraBuscar): Objeto que contiene la palabra a buscar.
+        palabra: Objeto que contiene la palabra a buscar.
 
     Returns:
         str: El/Los documentos de la palabra si se encuentra en la caché, de lo contrario "No se encontro".
     """
 
-    return {"resultado": mook.cache.get(palabra.palabra, ["No se encontro"])}
+    return {"resultado": mook.cache.get(palabra.palabra, ["No se encontro"])}   
 
 
 # Devuelve un repetido de una lista
@@ -111,11 +111,9 @@ def grafo(grafo_buscar: schema.Grafo):
     el resultado de una búsqueda en anchura (breadth-first search) y el resultado de una búsqueda en profundidad (depth-first search).
     
     Args:
-    - grafo_buscar: Un objeto de grafo que contiene el grafo a ser buscado y la ruta a ser encontrada.
-    - response_model: El modelo de respuesta a ser utilizado para el diccionario devuelto.
-    
+    grafo_buscar: Un objeto de grafo que contiene el grafo a ser buscado y la ruta a ser encontrada.    
     Returns:
-    - Un diccionario que contiene el grafo, el resultado de una búsqueda en anchura y el resultado de una búsqueda en profundidad.    """
+    Un diccionario que contiene el grafo, el resultado de una búsqueda en anchura y el resultado de una búsqueda en profundidad.    """
     grafo = Grafo()
     print(grafo_buscar)
     for arista in grafo_buscar.aristas:
@@ -123,7 +121,7 @@ def grafo(grafo_buscar: schema.Grafo):
     bfs=grafo.bfs(grafo_buscar.camino[0], grafo_buscar.camino[1])
     dfs = grafo.dfs(grafo_buscar.camino[0], grafo_buscar.camino[1])
     
-    return {"Grafo": grafo.grafo, "bfs": bfs, "dfs":dfs}
+    return {"grafo": dict(grafo.grafo), "bfs": bfs, "dfs":dfs}
 
 @app.get('/indices-invertidos')
 def indices_invertidos(request: Request):
