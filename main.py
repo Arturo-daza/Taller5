@@ -15,13 +15,12 @@ app = FastAPI()
 aws_access_key_id = 'AKIAXII2BKO7PPH2CJMQ'
 aws_secret_access_key = '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'
 
-sqs = boto3.client(
-    'sqs',
-    region_name='us-east-1',
-    aws_access_key_id=aws_access_key_id,
-    aws_secret_access_key=aws_secret_access_key
-)
-queue_url = 'https://sqs.us-east-1.amazonaws.com/498807690174/transacciones_banco'
+#sqs = boto3.client(
+ #   'sqs',
+  ## aws_access_key_id=aws_access_key_id,
+    #aws_secret_access_key=aws_secret_access_key
+#)
+#queue_url = 'https://sqs.us-east-1.amazonaws.com/498807690174/transacciones_banco'
 
 
 app.add_middleware(
