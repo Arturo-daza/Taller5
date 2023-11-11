@@ -140,12 +140,19 @@ def grafo(grafo_buscar: schema.Grafo):
     print(f'Mensaje publicado con éxito: {response["MessageId"]}')
     return {"id": response["MessageId"]}
 
+response=[]
 @app.get("/api/sqs")
 def process():
-    response=[]
+    
     for i in range(10):
         threading.Thread(target=pm).start()
     print(sqs.processed_messages)
     response.extend(sqs.processed_messages)
     print(response)
-    return {"mensajes leidos": response}
+    return {
+        "total mensajes procesados" : len(response),
+        "mensajes leidos": response
+        }
+@app.get("/api/sqs_clean")
+def clean_response():
+    return {"mensajes": response.clear()}
