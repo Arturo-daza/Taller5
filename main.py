@@ -8,10 +8,20 @@ from grafo import Grafo
 import threading
 from sqs import process_messages as pm
 import sqs
+import boto3
 templates = Jinja2Templates(directory="templates")
 
 app = FastAPI()
+aws_access_key_id = 'AKIAXII2BKO7PPH2CJMQ'
+aws_secret_access_key = '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'
 
+sqs = boto3.client(
+    'sqs',
+    region_name='us-east-1',
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key
+)
+queue_url = 'https://sqs.us-east-1.amazonaws.com/498807690174/transacciones_banco'
 
 
 app.add_middleware(
@@ -129,13 +139,13 @@ def grafo(grafo_buscar: schema.Grafo):
     
     return {"grafo": dict(grafo.grafo), "bfs": bfs, "dfs":dfs}
 
-# @app.post("/api/sqs")
-# def publicar(message:dict):
-#         # Publicar un mensaje en la cola
-#     response = sqs.send_message(
-#         QueueUrl=queue_url,
-#         MessageBody=message['message']
-#     )
+@app.post("/api/sqs")
+def publicar(message:dict):
+        # Publicar un mensaje en la cola
+    response = sqs.send_message(
+        QueueUrl=queue_url,
+        MessageBody=message['message']
+    )
 
     print(f'Mensaje publicado con éxito: {response["MessageId"]}')
     return {"id": response["MessageId"]}
