@@ -66,7 +66,6 @@ class ArbolBinarioBusqueda:
             The current node being checked for insertion.
         """
         if valor == nodo.valor:
-            # Value already exists in the binary search tree, ignore insertion
             return
         elif valor < nodo.valor:
             if nodo.izquierda is None:

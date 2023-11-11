@@ -142,7 +142,7 @@ def grafo(grafo_buscar: schema.Grafo):
     
     return {"grafo": dict(grafo.grafo), "bfs": bfs, "dfs":dfs}
 
-@app.post("/api/sqs", response_model=schema.ResultadoSQS)
+@app.post("/api/sqs")
 def publicar(message:dict):
         # Publicar un mensaje en la cola
     response = sqs.send_message(
@@ -153,7 +153,7 @@ def publicar(message:dict):
     print(f'Mensaje publicado con éxito: {response["MessageId"]}')
     return {"id": response["MessageId"]}
 
-@app.get("/api/sqs", response_model=schema.ResultadoSQS)
+@app.get("/api/sqs")
 def process():
 
     # Recibir mensajes de la cola
@@ -186,4 +186,4 @@ def process():
         }
     else:
         print("No se encontraron mensajes en la cola.")
-        return {"message": "No se encontraron mensajes en la cola."}
+        return {"respuesta": "No se encontraron mensajes en la cola."}
