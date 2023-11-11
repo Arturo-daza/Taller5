@@ -1,8 +1,8 @@
 
 import boto3
 
-aws_access_key_id = 'AKIAYEIE6WITLXIU6YWL'
-aws_secret_access_key = '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'
+aws_access_key_id = 'AKIAXII2BKO7PPH2CJMQ'
+aws_secret_access_key = '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'
 
 sqs = boto3.client(
     'sqs',
@@ -10,7 +10,7 @@ sqs = boto3.client(
     aws_access_key_id=aws_access_key_id,
     aws_secret_access_key=aws_secret_access_key
 )
-queue_url = 'https://sqs.us-east-2.amazonaws.com/558893019686/LaMasVeloz'
+queue_url = 'https://sqs.us-east-1.amazonaws.com/498807690174/banco2'
 # Lista para guardar los mensajes procesados
 
 processed_messages = []
