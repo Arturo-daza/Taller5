@@ -5,25 +5,12 @@ import schema
 import mook
 import arbol_binario as ab
 from grafo import Grafo
-import boto3
-
+import threading
+from sqs import process_messages as pm
+import sqs
 templates = Jinja2Templates(directory="templates")
 
 app = FastAPI()
-
-
-
-# Credenciales de AWS
-aws_access_key_id = 'AKIAYEIE6WITLXIU6YWL'
-aws_secret_access_key = '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'
-
-sqs = boto3.client(
-    'sqs',
-    region_name='us-east-2',
-    aws_access_key_id=aws_access_key_id,
-    aws_secret_access_key=aws_secret_access_key
-)
-queue_url = 'https://sqs.us-east-2.amazonaws.com/558893019686/LaMasVeloz'
 
 
 
@@ -142,48 +129,23 @@ def grafo(grafo_buscar: schema.Grafo):
     
     return {"grafo": dict(grafo.grafo), "bfs": bfs, "dfs":dfs}
 
-@app.post("/api/sqs")
-def publicar(message:dict):
-        # Publicar un mensaje en la cola
-    response = sqs.send_message(
-        QueueUrl=queue_url,
-        MessageBody=message['message']
-    )
+# @app.post("/api/sqs")
+# def publicar(message:dict):
+#         # Publicar un mensaje en la cola
+#     response = sqs.send_message(
+#         QueueUrl=queue_url,
+#         MessageBody=message['message']
+#     )
 
     print(f'Mensaje publicado con éxito: {response["MessageId"]}')
     return {"id": response["MessageId"]}
 
 @app.get("/api/sqs")
 def process():
-
-    # Recibir mensajes de la cola
-    response = sqs.receive_message(
-        QueueUrl=queue_url,
-        AttributeNames=[
-            'All'
-        ],
-        MessageAttributeNames=[
-            'All'
-        ],
-        MaxNumberOfMessages=1,
-        VisibilityTimeout=30,
-        WaitTimeSeconds=0
-    )
-
-    
-    if response.get('Messages'):
-
-        message = response['Messages']
-
-        print(f"Mensaje recibido: {message[0]['ReceiptHandle']}")
-
-        sqs.delete_message(
-            QueueUrl=queue_url,
-            ReceiptHandle=message[0]['ReceiptHandle']
-        )
-        return {
-            "respuesta": f"Mensaje Procesado: {message[0]['Body']}"
-        }
-    else:
-        print("No se encontraron mensajes en la cola.")
-        return {"respuesta": "No se encontraron mensajes en la cola."}
+    response=[]
+    for i in range(10):
+        threading.Thread(target=pm).start()
+    print(sqs.processed_messages)
+    response.extend(sqs.processed_messages)
+    print(response)
+    return {"mensajes leidos": response}
