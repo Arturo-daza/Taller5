@@ -5,13 +5,24 @@ import schema
 import mook
 import arbol_binario as ab
 from grafo import Grafo
-import threading
-from sqs import process_messages as pm
-import sqs
+import boto3
+from concurrent.futures import ThreadPoolExecutor
+import time
+
 templates = Jinja2Templates(directory="templates")
 
 app = FastAPI()
 
+aws_access_key_id = 'AKIAYEIE6WITLXIU6YWL'
+aws_secret_access_key = '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'
+queue_url = 'https://sqs.us-east-2.amazonaws.com/558893019686/LaMasVeloz'
+
+sqs = boto3.client(
+    'sqs',
+    region_name='us-east-2',
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key
+)
 
 
 app.add_middleware(
@@ -129,31 +140,66 @@ def grafo(grafo_buscar: schema.Grafo):
     
     return {"grafo": dict(grafo.grafo), "bfs": bfs, "dfs":dfs}
 
-# @app.post("/api/sqs")
-# def publicar(message:dict):
-#         # Publicar un mensaje en la cola
-#     response = sqs.send_message(
-#         QueueUrl=queue_url,
-#         MessageBody=message['message']
-#     )
+@app.post("/api/sqs")
+def publicar(message:dict):
+    # Publicar un mensaje en la cola
+    response = sqs.send_message(
+        QueueUrl=queue_url,
+        MessageBody=message['message']
+    )
 
     print(f'Mensaje publicado con éxito: {response["MessageId"]}')
     return {"id": response["MessageId"]}
 
 
+
+
+# Lista para almacenar los mensajes procesados
+processed_messages = []
+# Contador de mensajes procesados
+processed_count = 0
+
+def process_messages():
+    global processed_count
+    while True:
+        response = sqs.receive_message(
+            QueueUrl=queue_url,
+            AttributeNames=['All'],
+            MessageAttributeNames=['All'],
+            MaxNumberOfMessages=1,
+            VisibilityTimeout=30,
+            WaitTimeSeconds=0
+        )
+
+        if 'Messages' in response and len(response['Messages']) > 0:
+            message = response['Messages'][0]
+            print(f"Mensaje recibido: {message['Body']}")
+
+            # Añadir el mensaje a la lista de mensajes procesados
+            processed_messages.append(message['Body'])
+            # Incrementar el contador de mensajes procesados
+            processed_count += 1
+
+            sqs.delete_message(
+                QueueUrl=queue_url,
+                ReceiptHandle=message['ReceiptHandle']
+            )
+        else:
+            print("No se encontraron mensajes en la cola.")
+            break
+
 @app.get("/api/sqs")
-def process():
-    response=[]
-    for i in range(10):
-        threading.Thread(target=pm).start()
-    print(sqs.processed_messages)
-    response.extend(sqs.processed_messages)
-    print(response)
+async def process_sqs_messages():
+    start_time = time.time()
+
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        for _ in range(5):
+            executor.submit(process_messages)
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
     return {
-        "total mensajes procesados" : len(response),
-        "mensajes leidos": response
-        }
-    
-# @app.get("/api/sqs_clean")
-# def clean_response():
-#     return {"mensajes": response.clear()}
+        "Tiempo transcurrido para procesar mensajes": f"{elapsed_time} segundos",
+        "Mensajes procesados": processed_count,
+        "Lista de mensajes procesados": processed_messages
+    }
