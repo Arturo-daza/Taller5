@@ -154,13 +154,9 @@ def publicar(message:dict):
 
 
 
-# Lista para almacenar los mensajes procesados
-processed_messages = []
-# Contador de mensajes procesados
-processed_count = 0
 
-def process_messages():
-    global processed_count
+
+def process_messages(processed_messages, processed_count):
     while True:
         response = sqs.receive_message(
             QueueUrl=queue_url,
@@ -178,7 +174,7 @@ def process_messages():
             # Añadir el mensaje a la lista de mensajes procesados
             processed_messages.append(message['Body'])
             # Incrementar el contador de mensajes procesados
-            processed_count += 1
+            processed_count[0] += 1
 
             sqs.delete_message(
                 QueueUrl=queue_url,
@@ -190,16 +186,21 @@ def process_messages():
 
 @app.get("/api/sqs")
 async def process_sqs_messages():
+    # Lista para almacenar los mensajes procesados
+    processed_messages = []
+    # Contador de mensajes procesados
+    processed_count = [0]
+
     start_time = time.time()
 
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        for _ in range(5):
-            executor.submit(process_messages)
+    with ThreadPoolExecutor(max_workers=30) as executor:
+        for _ in range(30):
+            executor.submit(process_messages, processed_messages, processed_count)
 
     end_time = time.time()
     elapsed_time = end_time - start_time
     return {
         "Tiempo transcurrido para procesar mensajes": f"{elapsed_time} segundos",
-        "Mensajes procesados": processed_count,
+        "Mensajes procesados": processed_count[0],
         "Lista de mensajes procesados": processed_messages
     }
