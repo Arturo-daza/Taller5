@@ -48,3 +48,23 @@ window.addEventListener('DOMContentLoaded', event => {
     });
 
 });
+
+    // Espera a que el documento esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Obtiene todas las imágenes con la clase "portfolio-box"
+    var portfolioImages = document.querySelectorAll('.portfolio-box');
+
+        // Itera sobre cada imagen
+    portfolioImages.forEach(function(image) {
+        // Agrega un listener de clic a cada imagen
+        image.addEventListener('click', function(event) {
+            // Evita el comportamiento predeterminado del enlace
+            event.preventDefault();
+                // Obtiene el destino del enlace desde el atributo "data-target"
+            var target = image.getAttribute('data-target');
+
+            // Redirecciona a la página HTML correspondiente
+            window.location.href = target;
+        });
+    });
+});
