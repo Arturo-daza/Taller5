@@ -100,6 +100,7 @@ def detectar_primer_repetido(lista):
         tortuga = lista[tortuga]
     return tortuga
 
+# ALGORITMO MERGE_SORT
 
 def merge_sort(lista):
     if len(lista) <= 1:
