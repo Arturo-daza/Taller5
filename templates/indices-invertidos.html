@@ -93,7 +93,7 @@
       function buscarPalabra() {
         let palabra = document.getElementById("palabra").value;
 
-        fetch("http://137.184.45.65/api/indices-invertidos", {
+        fetch("http://localhost/api/indices-invertidos", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

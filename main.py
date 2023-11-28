@@ -1,6 +1,9 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, UploadFile, File, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.encoders import jsonable_encoder
+
 import schema
 import mook
 import arbol_binario as ab
@@ -8,10 +11,68 @@ from grafo import Grafo
 import boto3
 from concurrent.futures import ThreadPoolExecutor
 import time
+from io import StringIO
+from nn import imputacion
+import pandas as pd
+
 
 templates = Jinja2Templates(directory="templates")
 
 app = FastAPI()
+
+# Lista para almacenar las conexiones WebSocket
+connections = set()
+
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()  # Aceptar la conexión WebSocket
+    connections.add(websocket)  # Añadir la conexión WebSocket a la lista
+    try:
+        while True:
+            # Recibir mensajes del cliente WebSocket
+            data = await websocket.receive_text()
+            print(f"Mensaje recibido: {data}")
+
+            # Enviar mensajes a todos los clientes WebSocket conectados
+            for connection in connections:
+                await connection.send_text(f"Mensaje recibido: {data}")
+    except Exception as e:
+        print(f"Error en la conexión WebSocket: {e}")
+    finally:
+        # Remover la conexión WebSocket de la lista cuando se cierra la conexión
+        connections.remove(websocket)
+# Ruta de prueba para servir la página HTML que usa el WebSocket
+@app.get("/", response_class=HTMLResponse)
+async def read_root():
+    return """
+    <html>
+        <head>
+            <title>WebSocket Test</title>
+        </head>
+        <body>
+            <h1>WebSocket Test</h1>
+            <script>
+                const socket = new WebSocket("ws://" + window.location.host + "/ws");
+
+                socket.onmessage = (event) => {
+                    console.log("Mensaje recibido:", event.data);
+                };
+
+                socket.onclose = (event) => {
+                    console.error("WebSocket cerrado:", event);
+                };
+
+                function sendMessage() {
+                    const message = document.getElementById("message").value;
+                    socket.send(message);
+                }
+            </script>
+            <input type="text" id="message" placeholder="Escribe un mensaje" />
+            <button onclick="sendMessage()">Enviar</button>
+        </body>
+    </html>
+    """
 
 aws_access_key_id = 'AKIAYEIE6WITLXIU6YWL'
 aws_secret_access_key = '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'
@@ -204,3 +265,34 @@ async def process_sqs_messages():
         "Mensajes procesados": processed_count[0],
         "Lista de mensajes procesados": processed_messages
     }
+    
+@app.post("/imputacion")
+async def imputacion_nn(file: UploadFile = File(...)):
+    contents = file.file.read()
+    df = pd.read_csv(StringIO(contents.decode('utf-8')))
+    describe_data_original= df.describe().to_dict()
+    print(df.isnull().sum())
+    df_imputed=imputacion(df)
+    df_imputed_dict = df_imputed.to_dict() # Convertir el dataframe a un diccionario
+    describe_data_imputed = df_imputed.describe().to_dict()
+    response = {
+        "data": jsonable_encoder(df_imputed_dict),  # Devolver el diccionario como una respuesta JSON
+        "describe_imputed": jsonable_encoder(describe_data_imputed), 
+        "describe_original":  jsonable_encoder(describe_data_original)
+        
+    }
+    return response
+
+    
+    
+    
+    
+    
+# @app.get('/indices-invertidos')
+# def indices_invertidos(request:Request):
+#     return templates.TemplateResponse("indices-invertidos.html", {"request":request})
+
+
+# @app.get('/')
+# def indices_invertidos(request:Request):
+#     return templates.TemplateResponse("index.html", {"request":request})
