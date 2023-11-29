@@ -147,44 +147,79 @@ class ArbolBinarioBusqueda:
             self._imprimir_arbol_recursivamente(nodo.izquierda, prefijo, False)
             self._imprimir_arbol_recursivamente(nodo.derecha, prefijo, True)
 
-    def obtener_arbol(self, nodo=None):
+    # def obtener_arbol(self, nodo=None):
+    #     """
+    #     Returns the binary search tree as a dictionary.
+
+    #     Parameters:
+    #     -----------
+    #     nodo : Nodo, optional
+    #         The current node being added to the dictionary. Defaults to the root node.
+
+    #     Returns:
+    #     --------
+    #     dict
+    #         The binary search tree as a dictionary.
+    #     """
+    #     if nodo is None:
+    #         nodo = self.raiz
+    #     if nodo is None:
+    #         return None
+    #     arbol_dic = {
+    #         "valor": nodo.valor,
+    #     }
+    #     if nodo.izquierda is not None:
+    #         arbol_dic["izquierda"] = self.obtener_arbol(nodo.izquierda)
+    #     if nodo.derecha is not None:
+    #         arbol_dic["derecha"] = self.obtener_arbol(nodo.derecha)
+    #     return arbol_dic
+
+    # def imprimir_arbol_json(self):
+    #     """
+    #     Returns the binary search tree as a dictionary in JSON format.
+
+    #     Returns:
+    #     --------
+    #     dict
+    #         The binary search tree as a dictionary in JSON format.
+    #     """
+    #     arbol_dic = self.obtener_arbol()
+    #     return arbol_dic
+    
+    def to_dict(self):
         """
-        Returns the binary search tree as a dictionary.
+        Converts the binary search tree to a dictionary.
+
+        Returns:
+        --------
+        dict
+            A dictionary representation of the binary search tree.
+        """
+        if self.raiz is None:
+            return {}
+        else:
+            return self._to_dict_recursivo(self.raiz)
+
+    def _to_dict_recursivo(self, nodo):
+        """
+        A helper method for to_dict() that recursively converts the binary search tree to a dictionary.
 
         Parameters:
         -----------
-        nodo : Nodo, optional
-            The current node being added to the dictionary. Defaults to the root node.
+        nodo : Nodo
+            The current node being processed.
 
         Returns:
         --------
         dict
-            The binary search tree as a dictionary.
+            A dictionary representation of the binary search tree rooted at the given node.
         """
-        if nodo is None:
-            nodo = self.raiz
-        if nodo is None:
-            return None
-        arbol_dic = {
-            "valor": nodo.valor,
+        nodo_dict = {
+            'valor': nodo.valor,
+            'izquierda': self._to_dict_recursivo(nodo.izquierda) if nodo.izquierda else {},
+            'derecha': self._to_dict_recursivo(nodo.derecha) if nodo.derecha else {}
         }
-        if nodo.izquierda is not None:
-            arbol_dic["izquierda"] = self.obtener_arbol(nodo.izquierda)
-        if nodo.derecha is not None:
-            arbol_dic["derecha"] = self.obtener_arbol(nodo.derecha)
-        return arbol_dic
-
-    def imprimir_arbol_json(self):
-        """
-        Returns the binary search tree as a dictionary in JSON format.
-
-        Returns:
-        --------
-        dict
-            The binary search tree as a dictionary in JSON format.
-        """
-        arbol_dic = self.obtener_arbol()
-        return arbol_dic
+        return nodo_dict
 
     def preorden(self):
         """

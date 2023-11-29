@@ -1,12 +1,12 @@
 from pydantic import BaseModel,  Field
 
-class NodoSchema(BaseModel):
-    valor: int
-    izquierda: 'NodoSchema' = None
-    derecha: 'NodoSchema' = None
+# class NodoSchema(BaseModel):
+#     valor: int
+#     izquierda: 'NodoSchema' = None
+#     derecha: 'NodoSchema' = None
 
 class EsquemaArbol(BaseModel):
-    arbol: NodoSchema
+    arbol: dict
     preorden: list[int]
     inorder: list[int]
     postorden: list[int]
@@ -35,7 +35,7 @@ class Grafo(BaseModel):
     camino: tuple[int, int] = Field(..., example= (0,2))
     
 class Camino(BaseModel):
-    grafo: dict[int, list[int]]
+    grafo: dict
     bfs: list[int]
     dfs:list[int]
     

@@ -171,7 +171,7 @@ def arbol_binario(lista: schema.ListaNumeros):
     arbol = ab.ArbolBinarioBusqueda()
     for valor in lista.lista:
         arbol.insertar(valor)
-    salida = arbol.imprimir_arbol_json()
+    salida = arbol.json.dumps(arbol.to_dict())()
     preorden = arbol.preorden()
     inorder = arbol.inorder()
     postorden = arbol.postorden()
@@ -193,13 +193,14 @@ def grafo(grafo_buscar: schema.Grafo):
     Returns:
     Un diccionario que contiene el grafo, el resultado de una búsqueda en anchura y el resultado de una búsqueda en profundidad.    """
     grafo = Grafo()
-    print(grafo_buscar)
+    
     for arista in grafo_buscar.aristas:
         grafo.agregar_arista(*arista)
+    grafo_json = grafo.graficar()
     bfs=grafo.bfs(grafo_buscar.camino[0], grafo_buscar.camino[1])
     dfs = grafo.dfs(grafo_buscar.camino[0], grafo_buscar.camino[1])
     
-    return {"grafo": dict(grafo.grafo), "bfs": bfs, "dfs":dfs}
+    return {"grafo": grafo_json, "bfs": bfs, "dfs":dfs}
 
 @app.post("/api/sqs")
 def publicar(message:dict):
@@ -209,6 +210,7 @@ def publicar(message:dict):
         MessageBody=message['message']
     )
 
+    
     print(f'Mensaje publicado con éxito: {response["MessageId"]}')
     return {"id": response["MessageId"]}
 

@@ -1,6 +1,7 @@
 from collections import defaultdict, deque
 import networkx as nx
-from collections import defaultdict, deque
+import matplotlib.pyplot as plt
+
 
 class Grafo:
     """
@@ -26,6 +27,21 @@ class Grafo:
         """
         self.grafo[u].append(v)
         self.grafo[v].append(u)
+    
+    def graficar(self):
+        G = nx.Graph()
+        for u, vecinos in self.grafo.items():
+            for v in vecinos:
+                G.add_edge(u, v)
+
+        # Obtener la información del grafo en formato JSON
+        grafo_json = {
+            "nodes": [{"id": str(node)} for node in G.nodes],
+            "links": [{"source": str(edge[0]), "target": str(edge[1])} for edge in G.edges],
+        }
+
+        return grafo_json
+
 
     def bfs(self, inicio, destino):
         """
