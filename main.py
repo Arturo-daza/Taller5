@@ -295,6 +295,6 @@ async def imputacion_nn(file: UploadFile = File(...)):
 #     return templates.TemplateResponse("indices-invertidos.html", {"request":request})
 
 
-# @app.get('/')
-# def indices_invertidos(request:Request):
-#     return templates.TemplateResponse("index.html", {"request":request})
+@app.get('/')
+def indices_invertidos(request:Request):
+    return templates.TemplateResponse("index.html", {"request":request})
