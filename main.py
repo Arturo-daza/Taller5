@@ -171,7 +171,7 @@ def arbol_binario(lista: schema.ListaNumeros):
     arbol = ab.ArbolBinarioBusqueda()
     for valor in lista.lista:
         arbol.insertar(valor)
-    salida = arbol.json.dumps(arbol.to_dict())()
+    salida = arbol.to_dict()
     preorden = arbol.preorden()
     inorder = arbol.inorder()
     postorden = arbol.postorden()
